@@ -1,1 +1,36 @@
-# Qr-code-generator
+# QR Code Generator (Responsive & Shareable)
+
+A modern, responsive **QR Code Generator** built with **HTML, CSS, and JavaScript**.  
+It allows users to generate QR codes from text or URLs, download them with embedded text, and share them using the system share sheet on supported devices.
+
+---
+
+## ✨ Features
+
+- 🔗 Generate QR codes from **text or URLs**
+- ⌨️ Press **Enter** to generate QR
+- 📱 Fully **responsive** (mobile & desktop)
+- 📥 **Click QR to download** (PNG with text included)
+- 🤳 **Long-press on mobile** to open the **system share sheet**
+- 🔒 Input is disabled while QR is displayed
+- 🔄 Generate Again to reset
+- 🧼 Clean glass-style UI with smooth animations
+- 🌐 Works on all modern browsers
+
+---
+
+## 🛠️ Tech Stack
+
+- **HTML5**
+- **CSS3** (Flexbox, Media Queries, Glassmorphism)
+- **Vanilla JavaScript**
+- **QRServer API** for QR generation
+- **Canvas API** for image processing
+- **Web Share API** for native sharing
+
+---
+
+## 🚀 Live Demo
+
+👉 *(Add your hosted URL here once deployed)*  
+Example:
