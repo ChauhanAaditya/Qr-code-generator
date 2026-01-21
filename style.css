@@ -83,34 +83,59 @@ body::before {
     transition: transform 0.3s ease;
 }
 
-/* Button text */
+.container {
+    width: 400px;
+}
+
+.container input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+
+.container button {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 16px;
+    cursor: pointer;
+    overflow: hidden;
+    backdrop-filter: blur(6px);
+}
+
 .container button span {
     position: relative;
     z-index: 2;
     transition: opacity 0.3s ease;
 }
 
-/* QR layer */
+/* QR layer (will receive generated QR) */
 .container button::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: url("images/qr.png") center / contain no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
     opacity: 0;
-    transform: scale(0.6) rotate(-10deg);
+    transform: scale(0.6);
     transition: all 0.4s ease;
 }
 
-/* Hover effects */
-.container button:hover {
-    transform: scale(1.05);
-}
-
-.container button:hover span {
+/* Active state (after QR is generated) */
+.container button.show-qr span {
     opacity: 0;
 }
 
-.container button:hover::before {
+.container button.show-qr::before {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: scale(1);
 }
+
