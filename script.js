@@ -1,149 +1,26 @@
 const btn = document.getElementById("qrBtn");
 const input = document.getElementById("qrText");
+const qrBox = document.getElementById("qrBox");
 
 btn.addEventListener("click", () => {
     const text = input.value.trim();
-    if (!text) return alert("Please enter text or URL");
+    if (!text) {
+        alert("Please enter text or URL");
+        return;
+    }
 
-    const qrURL = 
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" 
-        + encodeURIComponent(text);
+    const qrURL =
+        "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
+        encodeURIComponent(text);
 
-    btn.style.setProperty("--qr", `url("${qrURL}")`);
-    btn.style.backgroundImage = "none";
-    btn.style.setProperty("--qr-img", `url("${qrURL}")`);
+    // Fade button out
+    btn.classList.add("hide");
 
-    btn.style.setProperty(
-        "--qr-bg",
-        `url("${qrURL}")`
-    );
+    // Generate QR
+    qrBox.style.backgroundImage = `url("${qrURL}")`;
 
-    btn.style.setProperty(
-        "background",
-        "rgba(255,255,255,0.25)"
-    );
-
-    btn.style.setProperty("--qr-url", `url("${qrURL}")`);
-
-    btn.style.setProperty(
-        "--qr-image",
-        `url("${qrURL}")`
-    );
-
-    btn.style.backgroundImage = "none";
-    btn.classList.add("show-qr");
-    btn.style.setProperty(
-        "--qr-image",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-image",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-code",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-code",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "background",
-        "rgba(255,255,255,0.25)"
-    );
-
-    btn.style.setProperty(
-        "--qr",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "background",
-        "rgba(255,255,255,0.25)"
-    );
-
-    btn.style.setProperty(
-        "backgroundImage",
-        "none"
-    );
-
-    btn.style.setProperty(
-        "--qr",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "background",
-        "rgba(255,255,255,0.25)"
-    );
-
-    btn.style.setProperty(
-        "--qr-image",
-        `url("${qrURL}")`
-    );
-
-    btn.style.background = "rgba(255,255,255,0.25)";
-    btn.style.setProperty(
-        "--qr-image",
-        `url("${qrURL}")`
-    );
-
-    // inject QR into pseudo-element
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    btn.style.setProperty(
-        "--qr-img",
-        `url("${qrURL}")`
-    );
-
-    // Final working line
-    btn.style.setProperty("--qr-img", `url("${qrURL}")`);
+    // Smooth reveal (slight delay feels premium)
+    setTimeout(() => {
+        qrBox.classList.add("show");
+    }, 300);
 });
