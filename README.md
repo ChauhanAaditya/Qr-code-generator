@@ -34,4 +34,4 @@ It allows users to generate QR codes from text or URLs, download them with embed
 
 👉 https://697087d8a29b0d1522be1458--statuesque-donut-2f265f.netlify.app/ 
 Example:
-![qr video]https://github.com/user-attachments/assets/33237cde-38b9-49a4-a664-45b477e11722
+https://github.com/user-attachments/assets/ccb47e2c-72cb-460d-bd70-0eb5f43a0d63
