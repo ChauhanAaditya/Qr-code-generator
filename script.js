@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentText = "";
     let longPressTimer = null;
 
+    // =========================
     // Generate QR
+    // =========================
     btn.addEventListener("click", () => {
         const text = input.value.trim();
         if (!text) {
@@ -17,11 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         currentText = text;
-
         currentQRUrl =
             "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
             encodeURIComponent(text) +
-            "&t=" + Date.now();
+            "&t=" + Date.now(); // cache buster
 
         input.disabled = true;
         btn.classList.add("hide");
@@ -32,38 +33,48 @@ document.addEventListener("DOMContentLoaded", () => {
         againBtn.classList.add("show");
     });
 
-    // Enter key support
+    // =========================
+    // Press Enter to generate
+    // =========================
     input.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !input.disabled) {
             btn.click();
         }
     });
 
-    // Disable right-click menu
+    // =========================
+    // Disable right click menu
+    // =========================
     qrBox.addEventListener("contextmenu", (e) => {
         e.preventDefault();
     });
 
-    // Desktop click → download
+    // =========================
+    // Desktop click → Download
+    // =========================
     qrBox.addEventListener("click", () => {
         if (!currentQRUrl) return;
         downloadQRWithText();
     });
 
-    // Mobile long press → download
+    // =========================
+    // Mobile long-press → Share
+    // =========================
     qrBox.addEventListener("touchstart", () => {
         if (!currentQRUrl) return;
 
         longPressTimer = setTimeout(() => {
-            downloadQRWithText();
-        }, 600);
+            shareQRWithText();
+        }, 600); // long press duration
     });
 
     qrBox.addEventListener("touchend", () => {
         clearTimeout(longPressTimer);
     });
 
-    // Generate again
+    // =========================
+    // Generate Again
+    // =========================
     againBtn.addEventListener("click", () => {
         input.disabled = false;
 
@@ -78,8 +89,50 @@ document.addEventListener("DOMContentLoaded", () => {
         currentText = "";
     });
 
-    // Download QR with text
+    // =========================
+    // Download QR + Text
+    // =========================
     function downloadQRWithText() {
+        createCanvasImage((blob) => {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "qr-with-text.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    }
+
+    // =========================
+    // Share QR + Text (System Share Sheet)
+    // =========================
+    function shareQRWithText() {
+        createCanvasImage(async (blob) => {
+            const file = new File([blob], "qr-with-text.png", {
+                type: "image/png"
+            });
+
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: "QR Code",
+                        text: currentText,
+                        files: [file]
+                    });
+                } catch (err) {
+                    // user cancelled share → do nothing
+                }
+            } else {
+                // fallback → download
+                downloadQRWithText();
+            }
+        });
+    }
+
+    // =========================
+    // Canvas creator (shared)
+    // =========================
+    function createCanvasImage(callback) {
         const img = new Image();
         img.crossOrigin = "anonymous";
         img.src = currentQRUrl;
@@ -87,11 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
         img.onload = () => {
             const size = 400;
             const padding = 20;
-            const textAreaHeight = 80;
+            const textHeight = 80;
 
             const canvas = document.createElement("canvas");
             canvas.width = size;
-            canvas.height = size + textAreaHeight + padding;
+            canvas.height = size + textHeight + padding;
 
             const ctx = canvas.getContext("2d");
 
@@ -99,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw QR
+            // QR
             ctx.drawImage(img, 0, 0, size, size);
 
             // Text
@@ -125,13 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             ctx.fillText(line, size / 2, y);
 
-            // Download
-            const a = document.createElement("a");
-            a.href = canvas.toDataURL("image/png");
-            a.download = "qr-with-text.png";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            canvas.toBlob(callback, "image/png");
         };
     }
 });

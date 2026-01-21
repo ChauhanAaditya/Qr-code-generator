@@ -154,3 +154,36 @@ button {
     transform: translateY(0);
     pointer-events: auto;
 }
+
+/* 📱 Small screens (phones) */
+@media (max-width: 480px) {
+
+    .container {
+        width: 92%;
+        height: 85%;
+        padding: 20px;
+    }
+
+    #qrBox {
+        width: 90vw;        /* responsive width */
+        height: 90vw;       /* keep square */
+        max-width: 320px;   /* cap size */
+        max-height: 320px;
+        padding: 16px;      /* slightly less padding on mobile */
+    }
+
+    #qrBox::after {
+        font-size: 11px;
+        margin-top: 6px;
+    }
+
+    #qrText {
+        font-size: 14px;
+        height: 46px;
+    }
+
+    button {
+        height: 46px;
+        font-size: 15px;
+    }
+}
