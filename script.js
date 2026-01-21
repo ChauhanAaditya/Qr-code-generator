@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("qrText");
     const qrBox = document.getElementById("qrBox");
 
+    let currentQRUrl = "";
+    let currentText = "";
+    let longPressTimer = null;
+
     // Generate QR
     btn.addEventListener("click", () => {
         const text = input.value.trim();
@@ -12,33 +16,54 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const qrURL =
+        currentText = text;
+
+        currentQRUrl =
             "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
             encodeURIComponent(text) +
-            "&t=" + Date.now(); // 🔥 cache buster
+            "&t=" + Date.now();
 
-        // Disable input
         input.disabled = true;
-
-        // Hide generate button
         btn.classList.add("hide");
 
-        // Show QR
-        qrBox.style.backgroundImage = `url("${qrURL}")`;
+        qrBox.style.backgroundImage = `url("${currentQRUrl}")`;
         qrBox.classList.add("show");
 
-        // Show generate again button
         againBtn.classList.add("show");
     });
 
-    // Press Enter to generate QR
+    // Enter key support
     input.addEventListener("keydown", (e) => {
         if (e.key === "Enter" && !input.disabled) {
             btn.click();
         }
     });
 
-    // Generate Again
+    // Disable right-click menu
+    qrBox.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+    });
+
+    // Desktop click → download
+    qrBox.addEventListener("click", () => {
+        if (!currentQRUrl) return;
+        downloadQRWithText();
+    });
+
+    // Mobile long press → download
+    qrBox.addEventListener("touchstart", () => {
+        if (!currentQRUrl) return;
+
+        longPressTimer = setTimeout(() => {
+            downloadQRWithText();
+        }, 600);
+    });
+
+    qrBox.addEventListener("touchend", () => {
+        clearTimeout(longPressTimer);
+    });
+
+    // Generate again
     againBtn.addEventListener("click", () => {
         input.disabled = false;
 
@@ -48,5 +73,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.value = "";
         input.focus();
+
+        currentQRUrl = "";
+        currentText = "";
     });
+
+    // Download QR with text
+    function downloadQRWithText() {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = currentQRUrl;
+
+        img.onload = () => {
+            const size = 400;
+            const padding = 20;
+            const textAreaHeight = 80;
+
+            const canvas = document.createElement("canvas");
+            canvas.width = size;
+            canvas.height = size + textAreaHeight + padding;
+
+            const ctx = canvas.getContext("2d");
+
+            // Background
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw QR
+            ctx.drawImage(img, 0, 0, size, size);
+
+            // Text
+            ctx.fillStyle = "#000";
+            ctx.font = "16px Poppins, Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+
+            const maxWidth = size - 40;
+            const words = currentText.split(" ");
+            let line = "";
+            let y = size + padding;
+
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line + words[i] + " ";
+                if (ctx.measureText(testLine).width > maxWidth && i > 0) {
+                    ctx.fillText(line, size / 2, y);
+                    line = words[i] + " ";
+                    y += 22;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, size / 2, y);
+
+            // Download
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = "qr-with-text.png";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+    }
 });
