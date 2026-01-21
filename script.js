@@ -1,26 +1,26 @@
-const btn = document.getElementById("qrBtn");
-const input = document.getElementById("qrText");
-const qrBox = document.getElementById("qrBox");
+alert("JS loaded");
 
-btn.addEventListener("click", () => {
-    const text = input.value.trim();
-    if (!text) {
-        alert("Please enter text or URL");
-        return;
-    }
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("qrBtn");
+    const input = document.getElementById("qrText");
+    const qrBox = document.getElementById("qrBox");
 
-    const qrURL =
-        "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
-        encodeURIComponent(text);
+    btn.addEventListener("click", () => {
+        const text = input.value.trim();
+        if (!text) {
+            alert("Please enter text or URL");
+            return;
+        }
 
-    // Fade button out
-    btn.classList.add("hide");
+        const qrURL =
+            "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
+            encodeURIComponent(text);
 
-    // Generate QR
-    qrBox.style.backgroundImage = `url("${qrURL}")`;
+        // Hide button
+        btn.classList.add("hide");
 
-    // Smooth reveal (slight delay feels premium)
-    setTimeout(() => {
+        // Show QR
+        qrBox.style.backgroundImage = `url("${qrURL}")`;
         qrBox.classList.add("show");
-    }, 300);
+    });
 });
